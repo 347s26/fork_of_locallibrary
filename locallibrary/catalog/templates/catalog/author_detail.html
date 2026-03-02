@@ -6,12 +6,12 @@
   <p>Date of death: {{ author.date_of_death }}</p>
 
   <h2>Books by this author</h2>
-  {% if author.book_set.all %}
-    <ul>
-        {% for book in author.book_set.all %}
-            <li><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></li>
-        {% endfor %}
-    </ul>
+  {% if author.books.all %}
+  <ul>
+    {% for book in author.books.all %}
+      <li><a href="{{ book.get_absolute_url }}">{{ book.title }}</a></li>
+    {% endfor %}
+  </ul>
   {% else %}
     <p>No books by this author.</p>
   {% endif %}

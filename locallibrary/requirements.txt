@@ -1,3 +1,2 @@
 Django~=5.2
 django-environ~=0.12
-django-ninja~=1.5
