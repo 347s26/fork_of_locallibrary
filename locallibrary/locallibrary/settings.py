@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import environ
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,12 +26,12 @@ env.read_env(str(BASE_DIR / ".env"))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k2o^iw_fi3(a8e%b_g28*k97knb9r*%8rt^)!^-r1_n8)iucws'
+SECRET_KEY = env.str("DJANGO_SECRET_KEY", default="django-insecure-voj5u4t68$8rcz9xg1cysr2rt=fyxx&@=x$arh!dajf()!6!14")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DJANGO_DEBUG", default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 
 
 # Application definition
@@ -104,13 +105,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+if len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
+    DATABASES = {
+        'default': env.db("DJANGO_DATABASE_URL"), # raises ImproperlyConfigured exception if not found
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/New_York'
+TIME_ZONE = env.str("DJANGO_TIME_ZONE", default="UTC")
 
 USE_I18N = True
 
@@ -120,7 +125,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
